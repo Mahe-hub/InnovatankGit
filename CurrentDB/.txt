@@ -1,0 +1,1242 @@
+**-Notes:
+*-Number of tables in the DB is 121
+*-For professinoal we have 4 tables 
+
+1*-Professinoal table structure 
+  -1 pk constraint is PK_Professional and professionalid is the pk 
+  -2 FK no action on delete and update ,but enable for status 
+     HelperID is FK for helperID in Helper table 
+  -3 Firstname ->nvarchar
+  -4 Lastname->nvarchar
+  -5 Address->nvarchar
+  -6 ContactNo->nvarcahr
+  -7 EmailID->nvarchar
+  -8 DateofBirth->datetime
+  -9 IsPaymentVerify->bit
+  -10IsEmailVerify->bit
+  -11NextPaymentDate->datetime
+  -12Status->bit
+  -13EmailVerificationCode->nvarchar
+-----------------------------------------------------
+2*-table : professional Evaloutors
+ following case professinoalid 10248 which contain 4 evaloutors 107,403,405,404    
+columns :
+ProfessionalEvalouatorID ->BigInt->pk
+ProfessionalID -> BigInt -> FK references Professional table (ProID)
+EvalouatorID -> Bigint ->FK references Evalouator Table(evalouator_id)
+------------------
+3*-table :Problem
+   Following problem added by the professional 10248
+   Columns:
+   -problemID ->bigint ->21192
+   -CategoryID ->bigint ->FK Category(CategoryID) 
+   -Tittle ->nvarchar
+   -Subcategory ->bigint->FK Subcategory(SubCategoryID)
+   -Type ->int -> but there is no explanation for numbers ?
+   -DiffcultyLevel->int->FK DiffucltyLevel(DiffcultylevelID)
+   -Description nvarchar->Issue store HTML codes
+   -ProfessionalID ->Bigint ->FK Professional(ProID)
+   -AddedDate -> datetime 
+   -LastSubmissionDate ->Datetime
+   -Status->bit
+   -Picture ->
+   -Parent problemID ->Bigit -> selfjoin 
+   -publishfalg ->bit
+   -startdate->datetime
+   -published date->datetime
+   -countofsolution->int
+   -SlotutionUploadType -> int -> no explantion for numbers ?
+   -IsPublishSolution->bit
+   -LastEvaluationdate ->datetime
+   -problem Status ->bigint ->FK  problemstatus(problemstatusID)
+    ==(why we have another column show status so we need to remove the first one )
+   -Isdelete ->bit
+   -DisplaySolutionUploadby -> bit 
+   -Added by -> bigint -> its not clear I have searched in professional,evalotrs and student for the ID but it is not exist 
+   -Updated by -> bigint -> the same added by issue
+   -Published by  ->bigint ->same added bu issue 
+   -CompanyLocation -> nchar
+   -Evaluatrion StartDate ->datetime -> it is should move to be beside LastEvalouationDate
+   -Noofevalouators ->int 
+   -AllowMultipleEvalouators ->bit
+   -Is Aggregated -> bit
+   -Guidelines ->nvchar -> store html code
+   -youtubeLink->nvarchar
+   -Buffertime
+   -Format -> int -> there is no explanation 
+   -Staggered hour->int
+   -Staggered min->int
+   -RegestrationStartDate->datetime it should move to be beside start date
+   -IsChatblocked -> bit
+   -IsTextAreablocked in solution->bit
+   -IsSendEmailnotificatiopn->bit
+   -Ispeertopeet->bit
+------------------------------
+4*Table :Category
+Columns
+-Category_ID ->bigint->PK
+-CategoryName ->nvarchar
+-Status ->bit
+-IsDelete -> bit
+-FileName -> nvarchar (if all the values is null there is no benefit to keep it )
+-------------------------
+5*Table : SubCategory 
+Columns:
+-SubCategoryID (PK)
+-CategoryID (FK) Category(CatID)
+-SubCategoryName nvachar
+-Status bit
+-IsDelete bit
+-Filename-> nvachar  (if all the values is null there is no benefit to keep it )
+---------------------------
+6*Table : DiffcultyLevel 
+Columns:
+-DifID ->INT->PK
+-Diflevelname->nvarchar
+-Status->bit
+-Description -> nvarchar
+-IsDelete -> bit
+-EvalouationCost -> Decimal 
+-RetaliatingDay -> int ->(what is the benifit from this column ?)
+-RetailiatingPeriod ->int-> (what is the benifit from this column ?)
+-DiffcultyLevelNameRxtColor ->nvarchar
+-DiffcultyLevelicon->nvarchar->(Where is the icon on the website if it is save in DB)
+---------------------------------
+7*Table :Problemstatus
+Columns:
+-ProblemStatusID ->bigint->PK
+-ProblemStatusName ->nvarchar
+----------------------------------
+8*Table :ProfessionalTrialConfiguration
+Columns
+-ProfessionalTrialConfigurationID ->bigint ->PK 
+-NoOfDays->int
+-NoofProblems->int
+--------------------------
+9*Table :ProblemFAQ 
+Columns:
+-ProblemFAQID ->Bigint->PK
+-ProblemID->bigint->FK  problem(problemID)
+-Question ->nvarchar ->(Why it saving html code?)
+-Anwser ->nvarchar ->(Why it saving html code?)
+-Questionby->bigint ->FK Student(studentID)(it should change to question by student)
+-AnwserBy->bigint->FK Professional(PROID)
+-QuestionsAddedon->dateTime
+-AnwserAddedon->datetime
+-IsDiscarded->bit
+-Questionbyprofessional->bigint (I am not sure if professional can ask question, and it should move to be beside question by )
+-----------------------------
+10*table :ProblemDataRepository
+columns
+-ProblemRepositoryID ->Bigint->Pk
+-ProblemID ->bigint ->FK Problems(problemID)
+-ShortCode->nvarchar->as TAG 
+-Title->nvarchar
+-FilesNvarchar
+-RepsoitoryTypeID ->Bigint ->FK Repository type 
+-Status ->bit
+----------------
+11*table :Repository type
+columns:
+RepoID ->bigint->PK
+Repotypename ->nvarchar
+---------
+12*Table :  RepositoryFiles
+columns 
+-FileID->bigint->pk 
+-ProblemRepositoryID->bigint->FK ProblemDataRepository (ProblemRepositoryID)
+-Files->nvarchar
+-------------
+13*table :problemrequest
+Columns:
+ -ProblemRequestID->bigint ->PK
+ -StudentID ->bigint ->FK student(studentID)
+ -ProblemID ->bigint ->FK problem(problemId)
+ -RequestedDate->Datetime
+ -RequestedStatus ->int
+ -GroupID -> Bigint->FK studentGroup(Groupid)
+ -AddedBy -> bigint (it is not clear where the benfit if its not conect with any of tables )
+ -AddedOn -> Datetime
+Note : I have tried to know what is the benfit from this table , but I could not find what is the realtion ship between this table and problem table 
+----------------------------
+14*table : ProblemResources
+columns :
+ -ProblemResourceID ->Bigint->PK
+ -ProblemID ->bigint
+ -ResourcesID->bigint
+ -AddedBy->bigint
+ -AddedOn->datetime
+ -UpdateBy->bigint
+ -IsDeleted->bit
+Note : there is no resources  FK to know the Resources information 
+       there is no problem id FK to know the problems information
+       there is no Added by fk to know who added the resources 
+       there is no updated by fk to know who updated the resources 
+-----------------------
+15*table : Problem Setting
+columns
+ -ProblemSettingID ->int->PK
+ -ProblemMaximumpoint ->decimal
+ -EvaluationSolutionCount -> int
+ -NoOfPublishedSolution ->int
+ -EnableEditStaggeredTime ->bigint
+Note: is this table for setting to any problem ?
+------------------------
+16*table : ProblemSolution
+columns:
+-ProblemSolutionID -> bigint ->PK
+-ProblemID ->bigint ->FK Problem(problemID)
+-StudentID -> Bigint ->FK Student(StudentID)
+-AddedON ->datetime
+-UpdatedOn -> datetime 
+-Grade -> nvarchar
+-Comment ->nvarchar
+-Reviewed->bit
+-GroupID->bigint->FK StudentGroup(GroupID)
+-GroupMemberID->bigint -> FK Groupmembers
+-EvaluationStatus ->int ->FK EvaloationStatus
+-IsDiscard -> bit
+-Solution Title->nvarchar
+-Is Submitted->bit
+-Is DiscardedByprofessional->bit
+---------
+17*Table : ProblemSolutionDetails
+column
+ -ProblemSolutionDetailsID->bigint-> pk
+ -ProblemSolutionID ->bigint->Fk problemSoultion
+ -ShortCode->nvarchar ->(?)
+ -Title ->nvarchar
+ -RepositoryTypeID->Bigint->FK Repositorytype
+ -Status -> bit 
+ -Text->nvarchar
+ -Link ->nvarchar
+ -IsDeleted->bit 
+--------------
+18*table:StudentGroup 
+-GroupID ->bigint ->PK
+-Groupname->nvarchar
+-Rescription->nvarchar
+-Picture->nvarchar
+-CreatedBy ->Bigint ->Fk Student
+-IsActive->bit
+-ProblemID ->bigint->FK problem(problemID) to know which group participate in this problem 
+-ProfessionalID ->bigint->FK professional(ProID)(but why we need to add it if we have already linked the master table with professional)
+------------------------
+19*table PinToTopProblems
+columns
+-PinToTopProblemID->bigint->pk 
+-ProblemID->bigint->FK it should link to Problems
+-UserAccountID->it should link to userAccounts 
+-AddedOn->datetime 
+-------------------------
+20*table :Groupmembers
+columns
+-GroupMemberID->bigint->pk 
+-GroupID ->bigint->FK StudentGroup (GroupID)
+-StudentID ->Bigint->FK Student(sTUDENTID)
+-IsAdmin -> Bit
+-IsDeleted ->bit
+-IsLeave ->bit
+-ReasonID ->bigint (There in no explenation to reason or FK constraint to know what is the reason )
+-LeaveDeleteNote->nvarchar
+-Addedby ->bigint -> but why we need it if we have already know who is admin and in studentGroup table we have column show who created this group 
+-Removedby ->bigint -> why is null and there is not FK contraint in case this group was deleted 
+-Removedate datetime 
+-IsProfessional->bit (Created by professional?)
+-ColorCode->nvarchar (Why we need it?)
+-----------------------
+21*table GroupRequest
+Columns 
+-GroupRequestID->bigint->pk 
+-GroupID->bigint
+-AdminID->bigint->UserAccount(UserAccountID)
+-StudentID->bigint->Students(StudentID)
+-RequestStatus->int->FK RequestStatus(RequestStatusID)
+-RequestedDate->datetime 
+-IsInnovatorRequested->bit 
+-RequestedBy->bigint (we can remove it because we have already student and admin ID columns )
+------------------------------
+22*table GroupTask
+columns 
+-TaskID->bigint->pk 
+-TaskName->nvarchar
+-Description->nvarchar
+-GroupID->bigint->FK studentGroup 
+-DeadLineDate->datetime
+-Addedby ->bigint->Fk UserAccount(UserAccountID)
+-Addeddate->datetime 
+-UpdatedBy->bigint->FK UserAccount(UserAccountID)
+------------------------------
+23*table GroupVoting
+columns 
+-GroupVotingID->bigint->pk 
+-GroupID->bigint->FK Groups(GroupID)
+-VoteForInnovatorID->Student(StudentID)
+-VoteStatus->int->it should link to table explain what valus mean 
+-AddedDate->datetime 
+-RequesterNote->nvarchar
+-RequestedBy->Student(StudentID)
+------------------------------
+24* table GroupVotingDetails 
+columns
+-GroupVotingDetailsID->bigint->pk 
+-GroupVotingID->bigint->FK GroupVoting(GroupVotingID)
+-VotedMemberID->bigint->FK students(StudentID)
+-VotedMemberStatus->int->FK requestStatus(requeststatusID)
+-IsRequested->bit 
+---------------------------------
+25*Table : ProblemSolutionComments
+columns
+ - SolutionCommentID ->bigint ->PK
+ -ProblemSolutionDetailsID ->bigint->FK problemSolutionDetails 
+ -StudentID ->bigint->Fk Student(studentID)
+ -GroupId ->Bigint ->Fk StudentGroup
+ -Comment ->nvarchar
+ -Color ->nvarchar (this column is not important so we can remove it )
+ -IsDeleted ->bit
+----------------------
+26*Table :SolutionComment
+Columns 
+-SolutionCommentID->bigint->pk 
+-ProblemSolutionID->bigint->Fk ProblemSolution(ProblemSolutionID)
+-Comment->nvarcahr
+-StudentReply->nvarchar
+-IsSkip->bit
+-CommentedOn->datetime
+-RepliedOn->datetime
+------------------------
+27*Table : ProblemSolutionFiles
+columns:
+-SolutionFileID ->bigint ->PK 
+-ProblemSoultionDetailsID->bigint->fk ProblemSolutionDetails(ProblemSoultionDetailsID)
+-Files->nvarchar
+-IsDeleted->bit 
+-DisplayName->nvarchar
+-Addedby->bigint ->FK Student(StudentID)
+-UpdatedBy->bigint ->FK Student(StudentID)
+-Deletedby->bigint ->FK Student(StudentID)
+-DeletedOn->datetime
+------------------------
+28*Table : ProblemSolutionLinks
+Columns:
+ - SolutionLinkedID ->bigint->pk
+ - problemSolutionDetailsID ->bigint->FK problemSolutionDetails(ProblemSolutionDetailsID)
+ - Link ->nvarchar
+ - isDelted->bit 
+ 
+-------------------------
+29*Table:ProblemSubscription
+columns :
+ -ProblemSubscriptionID ->Bigint->Pk 
+ -ProblemID ->bigint->FK Problem(problemID)
+ -Student_ID->Bigint->Fk Students(StudentID)
+ -GroupID ->bigint ->FK StudentGroup(GroupID)
+ -GroupMemberID ->bigint->FK ->GroupMembers (GroupMemberID)
+ -SubscribedDate -> DateTime
+--------------------------
+30*table : ProblemTag
+columns 
+-ProblemTagID ->int->pk
+-TagId ->int ->FK Tag(tagid)
+-ProblemId->bigint->Problem(problemID)
+-IsDelete->bit
+--------------------------
+31*table : tag 
+columns:
+-TagID ->int->Pk 
+-Tags ->nvarchar
+-CategoryID ->bigint->FK Category
+-SubCategoryID->bigint->FK SubCategory
+--------------------------
+32*table : ProblemView
+columns:
+-ProblemViewID ->bigint->pk 
+-problemID->bigint->FK problem(problemID)
+-Viewby ->bigint->FK UserAcounts(UserAcountID)
+-ViewOn -> Datetime
+-LastViewON->DateTime
+-ViewCount->int
+--------------------------
+33*table :UserAccounts 
+column : 
+-UserAccountID ->bigint->pk 
+-UserName ->nvarchar->Crypted 
+-password->nvarchar->Crypted 
+-RoleID ->bigint->FK Roles(RoleID)
+-Status->bit 
+-UserID->big int (we can removed if we use the userAccountID as PK )
+-LinkedINID->nvarchar ->Crypted 
+-GooglePlusID ->nvarchar->Crypted
+-FaceBookID->nvarcahr->Crypted 
+-TwitterID ->nvarchar->Crypted 
+-passwordresetlink->nvarchar (it should be crypted )
+-linkExpirationDate ->datetime 
+-IsSecondRole->bigint
+-FirstRoleID->bigint
+-FirstuserID ->bigint ->(it should be  FK ->UserAccount for selfjoing)
+--------------------------
+34*table : Role 
+columns 
+- RoleID ->int->pk 
+-RoleName->nvarchar
+------------------------
+35*table :Userplan
+columns:
+UserplanID ->bigint->pk 
+UserAccountID ->bigint->Fk UsserAccount(UserAccountID)
+PlanID ->bigint ->FK plandetails(planID)
+StartDate->datetime
+ExpiredDate->datetime
+Status->bit 
+-------------------------
+36*table : PlanDetails
+columns
+-PlanID ->Bigint->pk
+-PlanName->nvarchar
+-Description->nvarchar
+-Pricing->decimal
+-Status->bit
+-PlanType->int
+-Days->int
+-Noofproblems->int
+-PromoCodeAllow->bit 
+------------------------
+37*table : planCategory
+columns
+-planCategoryID ->bigint->pk
+-planID ->bigint
+-CategoryID->bigint->FK category(categoryID)
+-IsDelete->bit 
+------------------------
+38* table  : PlanDifficultyLevel
+column
+-PlanDifficulityLevelID ->bigint->pk
+-PlanID->bigint->fk plandetails(planid)
+-DiffcultyLevelID->int->fk diffculitylevel
+-IsDelete->bit
+-----------------------------
+39*table : PlanProblemHistory
+column
+-planProblemHistoryID ->bigint->pk
+-UserPlanID->bigint->fk Userplan(UserplanID)
+-UserAccountID->bigint->fk UserAccount(UserAccountID)
+-DifficultyLevelID->bigint
+-planID->bigint->fk planid(planid)
+-problemID->bigint->fk problem(problemid)
+-AddedDate ->datetime
+-IsExtra -> bit
+-ExtraPaidCoins ->bigint
+-----------------------------
+40* table :PlanType
+columns
+-planTypeID ->int->pk
+plantype->nvarchar
+-----------------------------
+41*table PlanUniversity
+columns
+PlanUnversityID->bigint->pk 
+PlanID->bigint->bigint->Fk plandetails(planID)
+UnverisityID->bigint->FK Unversity(UnversityID)
+IsDelete->bit
+------------------------------
+42*tablePromoCodedetails
+columns
+PromoCodeID ->bigint->pk 
+PromoCodeName->nvarchar
+Description->nvarchar
+ApplicableForNewUser->bit
+ApplicableForWxistingUser->bit 
+Amount->Decimal
+Status->bit
+ExpiryDate->datetime
+AddedDate->datetime
+Isdelete->bit
+PromocodeUserTypeID->bigint->Fk PromocodeUserTypeID(PromoCodeUserTypeID)
+--------------------------------
+43* table PromocodeUserType
+columns
+PromocodeUserTypeID->bigint->PK 
+PromocodeUserType->nvarchar
+--------------------------------------
+44*table  AppliedPromoCodeHistry
+columns
+AppliedPromoCodeHistryID->bigint->pk 
+PromoCodeID ->bigint->FK promoCodedetails(promoCodedetailsID)
+ApplyTo->bigint->FK UserAccounts(UserAccountsID)
+planID->bigint->FK planDetails(plandetailid)
+planAmount->decimal 
+PromoCodeAmount->decimal 
+PaidAmount->decimal
+-----------------------------------
+45*table : UserSkills 
+columns:
+-UserSkillID ->BIGINT->pk
+-SkillID->int->fk Skills(skillid)
+-StudentID ->bigint->FK student(studentid)
+-----------------------
+46*table skills 
+columns;
+SkillID -> int->pk 
+Skillname->nvarchar
+-----------------------
+47*table Student
+columns:
+StudentID ->bigint->pk
+FirstName->nvarchar
+LastName->nvarchar
+Address->nvarchar
+ContacntNo->nvarchar
+DateOfBirth->nvarchar
+IsPaymentDate->bit
+IsEmailVerfiy->bit
+NextPaymentDate->datetime
+Status->bit 
+UnversityID->bigint->FK Unversity(UnversityID)
+EmailVerificationCode->nvarchar
+EmailVerificationDate->dateTime
+AddedOn->dateTime
+TrialExpiredDate->datetime
+TrialFlag->bit
+-----------------------
+48*table StudentInterestsCategory
+columns
+StudentIntrestsCategoryID->bigint->pk
+StudentID->bigint->Fk Student(studentid)
+CategoryID ->bigint->Fk Category(CategoryID)
+-----------------------
+49*table  StudentLevelSetting
+columns;
+StudentLevelSettingID->bigint->pk
+MinimumPoint->decimal
+MaximumPoint->decimal
+Status->bit
+LevelName->nvarchar
+------------------------
+50*table StudentResult
+columns
+StudentResultID->bigint->pk 
+SolutionID->bigint->FK ProblemSolution(ProblemSolutionID )
+StudentID->bigint->FK Student(StudentID)
+Marks ->decimal
+Comments->nvarchar
+TotalMarks->decimal
+------------------
+51* table StudentTrialConfiguration
+columns
+StudentTrialConfigurationID->bigint->pk
+NoOfDays->int
+NoOfProblems->int
+------------------
+52* table Evaluator
+columns
+EvaluatorID ->bigint->pk 
+FirstName->nvarchar
+LastName->nvarchar
+ContactNo->nvarchar
+EmailID->nvarchar
+Profession->nvarchar
+AddedOn->datetime
+AddedBy ->bigint->FK UserAccount(UserAccountID)
+ProfielPic->nvarchar
+Status->bit
+Coins->nvarchar
+FileName->nvarchar
+--------------------
+53*table  EvaluationResult
+columns 
+EvaluationResultID->bigint->pk
+SolutionID ->bigint->FK ProblemSolution(ProblemSolutionID)
+EvaluatorID ->bigint->FK Evaloutor(EvaloutorID)
+EvaloutionStatusUD->int->FK EvaluationStatus
+OverallMarks->Decimal 
+OverallComment->nvarchar
+EvaluatorRanking->int
+ProfessionalRanking->int
+AdminRanking->int
+AdminComment->nvarchar
+StartDate->datetime
+ResultOutDate->datetime
+ExperiencePionts->bigint
+RewardTokens->bigint
+AddedByHelper->bigint
+AddedOn->datetime 
+UpdatedByHelper->bigint
+UpdatedOn->Datetime 
+------------------
+54*table  EvaluationResultDetails
+column
+EvaluationResultDetailsID -> bigint->pk 
+EvaluationResultID ->bigint->fk EvaluationResult(EvaluationResultID)
+EvaluationCriteriaID->bigint ->FK EvaluationCriteria(EvaluationCriteriaID)
+Marks->Decimal
+Comments->nvarchar
+------------------
+55*table EvaluationStatus
+columns
+EvaluationStatusID -> in ->pk
+StatusName->nvarchar
+-------------------------------
+56*table EvaluationTemplate
+columns
+EvaluationTemplateID->bigint->pk 
+EvaluationTemplateTitle->nvarchar
+Status->bit 
+IsDelete->bit 
+-------------------------------
+57*table EvaluationTemplateDetail
+columns
+EvaluationTemplateDetailID ->bigint->pk 
+EvaluationTemplateID ->bigint->FK valuationTemplate(EvaluationTemplateID)
+Criteria->nvarchar
+Weight->Decimal
+-------------------------------
+58* table EvaluationCriteria
+columns
+EvaluationCriteriaID ->bigint->pk 
+ProblemID ->bigint->fk Problem(problemid)
+Criteria->nvarchar
+Weight->decimal
+EvaluationTemplateID->bigint->FK EvaluationTemplate(EvaluationtemplateID)
+TemplateWeightAge->decimal
+-------------------------------
+59*table EvaluationTemplateSetting
+columns
+SettingID->bigint->pk 
+Setting->decimal
+------------------------------
+60* table EvaluatorCategory
+columns
+EvaluatorCategoryID->bigint->pk 
+EvaluatorID->bigint->FK Evaluator(EvaluatorID)
+CategoryID->bigint->FK Category(CategoryID)
+FileName->nvarchar
+------------------------------
+61* table  EvaluatorSubcategory;
+columns
+EvaluatorSubcategoryID->bigint->pk 
+EvaluatorID->bigint->fk Evaluator(EvaluatorID)
+SubCategoryID->bigint->fk SubCategory(SubCategoryID)
+FileName->nvarchar
+---------------------------------
+62* table EvaluatorProblemRequest
+columns 
+-EvaluatorProblemRequestID->BIGINT->PK 
+-EvaluatorID->Bigint->FK Evaluator(EvaluatorID)
+-ProblemID->bigint ->FK Problems(problemID)
+-RequestedDate->datetime 
+-RequestedStatus->bit
+-AssignedSolutions->int
+-AddedBy->bigint it should link with useracounts table 
+-Addedon->datetime
+----------------------------------
+63* table AggregateEvaluationApproval
+columns
+AggregateEvaluationApprovalId->pk->bigint
+Problemid ->bigint ->it should link with Problem table 
+ProfessionalID->bigint ->if should link with professional 
+IsAggrigate-> bit 
+AddedOn->datetime 
+AddedBy->bigint- >(we dont need to add because it always added by professional and we have column already )
+UpdatedOn->datetime
+UpdatedBy->bigint->it should link to professional table
+---------------------------------
+64*table FileStorage
+columns
+FileStorageID->bigint->pk
+ProblemID ->bigint->FK Problem(problemID)
+GroupID -> bigint->FK StudentGroups(GroupID)
+FolderinfoID->bigint
+Filename->nvarchar
+UserFriendlyFileName->nvarchar
+FileType->nvarchar
+FileSize->Decimal
+AddedBy->bigint
+AddedOn->datetime
+UpdatedBy->bigint
+Updatedon->datetime
+Deletedby->bigint
+DeleteOn->datetime
+IsDelete->bit 
+-------------------------------------
+65*table FileStorageActivity
+columns 
+FileStoregeActivityID->bigint->pk 
+ProblemID->bigint->FK Problem(ProblemID)
+GroupID->bigint->FK GroupStudent(GroupStudentID)
+ActivityBy->bigint
+ActivityOn->datetime
+FileStorageID->bigint->FK FileStorage(FileStorageID)
+ActivityMessage->nvarchar
+----------------------------------
+66* table FileStorageFolder
+columns
+Note : 
+I think this table is not important because we have aleardy the table FileStorage which contain file details 
+----------------------------------
+67* table FileStorageSetting
+columns
+FileStorageSettingID->bigint->pk 
+ProblemID->bigint->FK Problem(ProblemID)
+StorageSpace->decimal 
+MaximumFileuploadSize->decimal
+----------------------------------
+68*table NotificationDetails (should rename to notfication Message reciver)
+columns
+DetailsID->bigint->pk 
+NotificationID ->bigitn->fk Notifications(NotificationID)
+ReceiverID->bigint->FK(UserAccounts)
+IsRead->bit 
+Snooze->bit
+PageURL->nvarchar
+ReadBy->bigint
+IsOpen->bit
+-----------------------------------------
+69*table Notifications (should rename to notfication  Message sender)
+columns
+NotificationID->bigint->pk 
+SenderID->bigint->FK userAccounts(UserAccountid)
+GroupID->bigint->FK studentsGroup(studentGroupid)
+Message->nvarchar
+IsGroup->bit
+AddedDate->datetime 
+TypeID->bigint->FK NotificationType(TypeID)
+-------------------------------
+70*table NotificationType
+columns
+TypeID->bigint->pk 
+TypeName->nvarchar
+----------------------------------
+71*table Announcement
+columns:
+AnnouncementID->bigint->pk 
+ProblemID->bigint->FK Problem(problemID)
+Subject->nvarchar
+Description->nvarchar
+AddedBy->bigint->FK UserAccounts(useraccountid)
+AddedDate->datetime
+IsHelper->bit
+SendFollowers->bit
+-----------------------------
+72*table AlertMessage
+columns
+AlertMessageID->bigint->PK 
+MessageKey->nvarchar
+ScreenName->nvarchar
+Title->nvarchar
+Text->nvarchar
+PositiveButtonText->nvarchar
+NegativeButtonText->nvarchar
+-----------------------------------
+73*table Blog
+Continue tommorrow
+BlogID ->bigint->pk
+BlogTitle->nvarchar
+Description->nvarchar There is issue show html tag  
+AddedDate->datetime
+AddedBy->bigint->fk Useraccount(UserAccountID)
+IsActive->bit
+Blogpicture->nvarchar
+ShortDescription->nvarchar
+--------------------
+74*Table BlogTagDetails
+columns
+BlogTagsDetailsID->bigint->pk 
+BlogTagsID->bigint
+BlogID->bigint->FK Blog(BlogID)
+----------------------
+75*Table BlogTags:
+columns
+BlogTagID->BIGINT->PK 
+BlogTagName->Nvarchar
+--------------------------
+76*Table BrowserDetection
+columns
+DetectionID->bigint->pk 
+BrowserName->nvarchar
+AddedDate->datetime 
+--------------------------
+77*table ContactUS
+columns
+-ContactID ->bigint->pk 
+-Name->nvarchar
+-EmailID->nvarchar
+-Message->nvarchar
+-AddedDate->datetime
+-IpAddress->nvarchar
+-------------------------
+78*table Communication
+columns
+-CommunicationID->bigint->pk 
+-Member1id->bigint->it should be Fk to userAccounts(UserAccountid )
+-Member2ID->bgint->it should be Fk to userAccounts(UserAccountid )
+-GroupID->bigint->Fk studentGroups(StudentGroupID)
+note: there is an issue that when there is a communication between group's members the member2id is null ,
+      so we don't know to whom this message send 
+-IsGroup->bit
+-CreatedDate->datetime 
+-----------------------------
+79*table CommunicationMessage 
+Columns
+-CommunicationMessageID->bigint->pk 
+-CommunicationID->bigint->fk Communication(CommunicationID)
+-Message->nvarchar
+-SenderID->bigint (we can remove because we have this detail in the table Communication)
+-ReciverID->bigint (we can remove because we have this detail in the table Communication)
+-GroupID->bigint->fk studentGroups(StudentGroupID) (we can remove because we have this detail in the table Communication)
+-Status->bit 
+-SendDate->datetime 
+-----------------------------
+80 * table  CommunicationMessageStatus
+columns
+-CommunicationMessageStatusID->bigint->pk 
+-CommunicationMessageID->bigint->Fk CommunicationMessage(CommunicationMessageID)
+-ReceiverID->bigint
+-Status->bit 
+Note: this table should remove because we have table CommunicationMessage which have the details 
+      and we can fill in  the reciverID column with values of reciverID column from this table and reciverstatus column to 
+      the table CommunicationMessage  to show if the reciver recive the message or not 
+------------------------------
+81*Table Country 
+columns 
+-CountryID ->bigint->Pk 
+-CountryName->nvarchar
+country_code->nvarchar 
+------------------------------
+82*Table state 
+columns 
+- StateID->bigint->pk 
+-StateName->nvarchar 
+-Country ->bigint->Fk  Country(CountryID) 
+Note: this table has info for one country (Canada)
+-------------------------------
+83*Table City
+Columns 
+-CityID->bigint->pk 
+-CityName->nvarchar
+-State->Bigint ->FK  state(StateID)
+-----------------------------
+84* Table CoinPlans
+columns
+-CoinPlanID->bigint->pk 
+-Money->decimal
+-Coins->decimal 
+-Status->bit
+-IsDelete->bit
+--------------------------------
+85*Table EmailSubscription
+columns
+-EmailSubscribeID->bigint->pk 
+-EmailSubscribeFlag->bit
+----------------------------------
+86* table Exceptions
+Columns 
+-ExceptionID->bigint->pk 
+-ExceptionMessage->nvarchar
+-ControllerName->nvarchar
+-ExceptionKey->nvarchar
+-AddedBy->bigint ->it should link with userAccounts
+-AddedDate->datetime
+-InnerException->nvarchar
+---------------------------------
+87 *Table ExperienceRewardPoint
+Columns 
+-ExperienceRewardPointID ->bigint -> Pk 
+-DifficultyLevelID->bigint->Fk DifficultyLevel (DifficultyLevelID)
+-Rank->int
+-ExperiencePoint->bigint
+-RewardPoint->bigint
+-AddedDate->Datetime 
+-table should have column Added By to know who add this rank 
+-UpdateDate datetime 
+- table should have column Updated By to know who update this rank
+---------------------------------
+88 *Table DeletationReason
+columns
+-DeletationReasonID->bigint->pk 
+-ReasonID->bigint it should link with reason table to get explanation 
+-TaskID->bigint->FK GroupTask(TaskID)
+-Notes->nvarchar
+-AddedOn->datetime
+-AddedBy->bigint->FK userAccounts(UserAccountID)
+---------------------------------
+89 *Table Reasons
+column
+-ReasonID->bigint->pk 
+-Reason->nvarchar
+-------------------
+90*Table ReasonsForDeleteGroup
+columns 
+-ReasonForDeleteGroupID->bigint->pk 
+-ReasonForDeleteGroupMessage->rank 
+-Rank->int 
+-----------------------------------
+91*Table ReasonsForLeaveGroup
+columns 
+-ReasonForLeaveGroupID->bigint->pk 
+-ReasonForLeaveGroupMessage->nvarchar
+-Rank->int
+-----------------------------------
+92* table FollowedInnovatorHistory
+columns
+-FollowID->bigint->PK 
+-ProblemID->bigint->FK problem(problemID)
+-StudentID->bigint ->Fk Student(StudentID)
+-Isfollow->bit
+--------------------------------
+93*Table Helper
+Columns 
+-HelperID->Bigint->Pk 
+-EmailID->nvarchar
+-Status->bit 
+---------------------------------
+94*table HeartbeatSetting
+columns 
+-HeartbeatSettingID->bigint->pk 
+-ResultOutDate->datetime 
+-DifficultyLevelID->bigint->fk DifficultyLevel(DifficultyLevelID) but its not important to mention this column because we have it already in the problem table 
+-RetailationPeriodOverDate->datetime 
+-ProblemID->Bigint->Fk Problem(ProblemID)
+-SolutionID->Bigint->Fk ProblemSolution(ProblemSolutionID)
+-StudentID->Bigint->Fk Student(StudentID)
+-ExperiencePoints->bigint
+-RewardPoints->bigint
+-Heartbeats->Decimal
+-HeartbeatUpdatedDate->Decimal 
+------------------------------------
+95*table  Hackathon
+columns
+-HackathonID->bigint->pk 
+-HackathonName->nvarchar
+-UniversityID->bigint->FK University(UniversityID)
+-Rating->Decimal
+-Description->nvarchar
+-Status->bit
+---------------------------------
+96*table languages
+Columns
+-LanguageID->bigint->pk 
+-LanguageName->nvarchar
+-LanguageCode->nvarchar
+---------------------------------
+97*table LevelWiseProblem
+Columns
+-LevelProblemID->bigint->pk 
+-PlanID->bigint->Fk planDetails(planid) 
+Its not clear what is the relation betqeen level problem and plan 
+Where is the problemID that  have this levelproblem 
+- Difficulty Level -> int  
+Difficulty Level to aproblem or to plan ?
+- NoOfProblem -> bigint its already have mentioned in plan details table 
+- Coins->int  
+----------------------------------------
+98* table LoggingInformation
+This table does not have any relation with any table 
+and also does not have any record , so its better to remove it
+----------------------------------------------
+99* table  MulEvaluationResult
+columns
+-MulEvaluationResultID->Bigint->pk 
+-SolutionID->bigint->Fk ProblemSoluation(ProblemSoluationID)
+-ProblemID->Bigint->FK Problems(ProblemID)
+-EvaluatorID->Bigint->Evaluator(EvaluatorID)
+-EvaluationStatusID->int->fk EvaluationStatus(EvaluationStatusID)
+-OverallMarks->Decimal
+-OverallComment->nvarchar
+-EvaluatorRanking->int
+-----------------------------------------
+100*Table MulEvaluationResultDetails
+columns
+-MulDetailsID->bigint->pk 
+-MulEvaluationResultID->biginy->MulEvaluationResult(MulEvaluationResultID)
+-EvaluationCriteriaID->bitint->EvaluationCriteria(EvaluationCriteriaID)
+-Marks->decimal
+-comments->nvarchar
+-----------------------------------------
+101* table MulEvaluationResultHistory
+Columns
+-MulEvaluationResultDetailsHistoryId ->bigint->PK 
+-MulDetailsID->bigint->it should lik to MulDetailsID in the table MulEvaluationResultDetails
+-MulEvaluationResultID->bigint->it should link with  MulEvaluationResult(MulEvaluationResultID)
+-EvaluationCriteriaID->it should link with EvaluationCriteria(EvaluationCriteriaID)
+-Marks->decimal 
+-comments ->nvarchar
+-Activity->nvarchar
+-ChangedDate->datetime 
+----------------------------------
+102* table MulEvaluationResultHistory
+Notes 
+we dont need this table because we have already the detaitls and events on the result in two tables MulEvaluationResultDetails,MulEvaluationResultDetailsHistory
+------------------------------------- 
+103*table Resources
+columns 
+-ResourceID->bigint->pk 
+-ResourceTypeID->bigint it should link to table ResourceType to get more info 
+-ResourceName->nvarchar 
+-Text->nvarchar
+-Link->nvarchr
+-ScheduleTime->datetime
+-ResourceFor->bigint -> it should link to  ResourceFor(ResourceForID)
+-IsAll->bit 
+---------------------------------
+104*Table ResourceFiles
+columns 
+-ResourceFileID->bigint->pk 
+-ResourceID->bigint->FK it should link with Resources(ResourceID)
+-ResourceFile->nvarchar
+-IsDeleted->bigint->it should bit to conside as flag 
+-AddedBy->bigint ->it should link to Useracounts(UserAccountsid)
+-AddedOn->dateTime 
+-UpdateBy->bigint->it should link to Useracounts(UserAccountsid)
+-UpdateOn->datetime
+--------------------------
+105*Table ResourceFor
+columns 
+-ResourceForID->bigint->pk 
+-ResourceFor->nvarchar
+---------------------------
+106*Table ResourceTypes
+columns 
+ResourceTypeID->bigint->pk 
+ResourceType->nvarchar
+---------------------
+107*Table ResourcesViewDetails
+columns 
+-ResourcesViewDetailID->bigint->pk 
+-UserID->bigint->it should link with userAccounts(Userid )
+-RoleID->bigint-> it should link with Roles table (roleid)
+-ResourcesID->bigint-> it should link with Resources(ResourcesID)
+-StartTime->datetime 
+-CompletedTime->datetime 
+-IsCompleted->bit 
+-AddedBy -> it should link with userAccounts(Userid )
+-AddedOn->datetime 
+-UpdateBy->bigint->it should link with userAccounts(Userid )
+-UpdateOn->datetime
+-IsDeleted->bit
+-------------------------------------
+108* Table RequestStatus
+Columns
+-RequestStatusID->bigint->pk 
+-RequestStatusName->nvarchar
+---------------------------
+109*Table ShareChallenge
+Columns 
+-ShareChallengeID->bigint->pk 
+-ProblemID->bigint->FK Problems(ProblemID)
+-SharedToID->Student(StudentID)
+-Note->nvarchar
+-AddedDate->datetime 
+-AddedBy->UserAccoutns(UserAccountid)
+------------------------------------
+110*Table sysdiagrams
+Columns 
+-name->Sysnames->pk 
+-principal_id->int
+-diagram_id->int
+-version->int
+-definition->varbinary
+-----------------------------
+111*Table TaskStatus
+columns 
+-TaskStatusID->int->pk 
+-TaskStatusName->nvarchar
+-------------------------------
+112*Table TaskDetail 
+column
+-TaskDetailID->bigint->pk
+-TaskID->bigint->GroupTask(Taskid)
+-AssignedBy->bigint->fk useracounts(useraccountid)
+-AssignedTo->bigint->fk useracounts(useraccountid)
+-AssignedDate->datetime
+-TaskStatus->int->fk TaskStatus(TaskStatusID)
+-UpdatedBy->bigint->fk useracounts(useraccountid)
+-UpdatedDate->datetime
+-----------------------------
+114*Table TaskRequest
+Column
+-TaskRequestID->bigint->pk 
+-TaskID->bigint
+-RequestBy->Bigint->FkUserAccount(Useraccountid)
+-Requestto->Bigint->FkUserAccount(Useraccountid)
+-RequestedDate->datetime 
+-RequestStatus->int->FK requestStatus(RequestStatusID)
+-IsDelete->bit
+-UpdateBy->Bigint->FK UserAccounts->UserAccount(UserAccountid)
+-----------------------------------
+115*Table TransactionType
+column
+-TypeID ->bigint->pk 
+-Name->nvarchar
+---------------
+116*Table Transactions
+column
+-TransactionID->bigint->pk 
+-TransactionNo->nvarchar
+-RoleID->int->fk roles(roleid)
+-Userid->bigint->FK userAccounts(userAccountid)
+-Amount->Decimal
+---------------
+117*Table Wallet
+Columns
+-WalletID->bigint->pk 
+-UserAccountID->bigint->FK Useraccount(useraccountID) 
+-TransactionID->bigint->FK Transactions(TransactionID)
+-TransactionTypeID->FK TransactionType(TypeID)
+-AddedDate->datetime
+-Amount->Decimal 
+-Coins->bigint
+--------------------
+118*Table WalletTransaction
+We can remove this table because we have already the table Wallet which contain the same details 
+-----------------
+119*table :ProfessionalStaggeredTimeDetails
+columns:
+    -ProfessionalstaggeredtimedetailsID ->PK
+    -ProblemID ->bigint->FK problem(problemID)
+    -StudetID->Bigint->FK Student(StudentID)
+    -StaggeredStarttime->datetime
+Note:
+Ifound a bugs in the system through DB
+in the problem table where problem id is 20843  the last submission date is 2020-12-23 11:00:00.000
+and Evalouation start date is 2020-12-23 11:00:00.000, but in the ProfessionalStaggeredTimeDetails I have noticed two student have started at last submission date and start evaloution date 
+So they should have buffer time but in the problem's record the buffer time is 0 ?
+
+
+   ProfessionalStaggeredTimeDetailsID	ProblemID	StudentID	StaggeredStartTime
+    6	                                   20843	  11157	       2020-12-23 11:00:00.000
+    7	                                   20843	  11161	       2020-12-23 11:00:00.000
+=================================================================================
+Notes:
+=======
+- The professional may be professional and evaloutor or just professional 
+- The professional contain one or more evalouator and evalouator belong to one professional 
+- The table link between professional and evaloutors is professional Evaloutors table which contain professional id as FK and evaloutor id as FK 
+- The proffesional can add one or more problem ,but the problem belong to one proffesional 
+- The problem category has one category and category has one problem or more 
+- The category has one subcategory and subcategory belong to one category 
+- Problem diffculty level has one level and level belong to one problem or more 
+- Problem has one chlid problem or more ,but chlid problems belong to one parent problem 
+- Problem has one status ,but one status belongs to one problem or more 
+- The relation between problem and staggeredstarttimedetails not completed yet !
+- The table ProfessionalTrialConfiguration we need to remove it because its not connect with any tables and contain one record
+- Problem has one question or more 
+- Student can ask one question or more,and questions anwsered by one professional 
+- Each problem has one repo and one repo belong to one problem 
+- Each repo contain one or more repo type 
+- Problem requested by one student or more 
+- Problem should has one resources or more ,and the resources belong to one problem or more(should be connected ) 
+- ProblemSetting ?
+- Each problem has solution has submited by one student or group or many students or many groups
+- Each group created by one admin 
+- Each group has one student or more than one student 
+- Each Student has 1 comment or more and the coments belong to one student 
+- Each Group has 1 commment or more and the comments belong to one group. 
+- Each solution has one detail or more ,but the details belong to one solution 
+- Each solution has 1 file or more, and these files belongs to one solution
+- Each solution has i link or more ,and link or links belong to one solution
+- Each problem has one subscriber or more , subscriber subscribe one problem or more 
+- Each problem has one tag or more , but this tag belong to one problem or more 
+- Each Category and Subcategory have  one tag or more ,And this tags belong to one category and subcategory  
+- Each problem view by one user or more,user can view one problem  or more  
+- Each user has one role or more  ,role belong to one user or more 
+- Each role has one explanation ,one explanation belong to one role 
+- Each user has plan ,but the plan belong to one user or more 
+- Each user (Student) has one skill or more ,one skill belong to one student or more 
+- Each skills has one explantion ,and each explanation belong to one skill 
+- Each user has 1 plan,each plan belong to one more useraccount
+- Each plan has 1 category ,1 category has belong one plan or more 
+- Each plan has 1 category, 1 Category belong to one plan or more 
+- Each user has many problem history 
+- Each user has 1 plan type ,1 type belong to one user or more 
+- Each plan belong to one unversity,each unversity has one or more than one plane 
+- Each University has 1 student or more , each student belong to one University or more 
+- Some of Student belong to one or more StudentInterestsCategory, and each StudentInterestsCategory has one student 
+- This table StudentLevelSetting does not have any conection with any tables
+- This table StudentResult is empty and consider as does not have any conectopns with tables 
+- I think this table  StudentTrialConfiguration is just for trial Student 
+- Each evaluator has added by one Admin , one admin add one evalouator or more 
+- Each evaluator give many solutions results 
+- Each Evaluation Result has one critieria or more , and one critieria exist in one evalouation result or more 
+- Each evaluation has 1 status and 1 status belong to many evaluations
+- Each problem has one or more criteria which belong to one templet ,each templet can be in one problem or more 
+- Each Template has one criteria or more , each criteria belong to one template 
+- This table EvaluationTemplateSetting has no link with any of tables 
+- Each evaluator has one category or more , this category belong to one evaluator or more 
+- Each evaluator has one subcategory ,each subcategory has belong to more than one evaluator 
+- Each problem has 1 file or more ,this file belong to one problem 
+- Each problem has one activity or more , these activities belong to one problem 
+- Each file has one activity or more , these activities belong to one file or more 
+- Each group has one activity or more or they dont have , these activities belong to one group 
+- Each problem has one file storge and this file storge belong to one  problem 
+- Each user recive one notification or more , this notfication belong to one user 
+- Each user can send one notification or more , but this notification belong to one user 
+- Each group can send one notification or more , but this notification belong to one group 
+- Each notification has one type, this type belong to one or more notification 
+- Each problem has one announcement or more , these announcement belong to one problem 
+- These announcements added by one user or more,each announcement belong to one user 
+- This table AlertMessage has no conection with any tables and it user to store the message alert details 
+- Each promotion has 1 type ,this type belong to one promotion code more 
+- Each user has 1 promotion , but this promotion apply to one user or more 
+- Each professional aggregate or disaggregate many problems ,  and these problems aggregate or disaggregate by one user 
+- Each Adminstrator can add blog or more , this blog belong to one admin 
+- Each blog has many blog details , this blog details belong to one blog 
+- Each blog has one tag or more , this tag belong to one blog  
+- This table BrowserDetection does not have any link with any table 
+- This table ContactUS save information about who contact support and does not have any link with any table 
+- Each user has communication with one user or more
+- Each group of student has one communication 
+- Each communication has one message or more 
+- This table save country information and does not have any relation with any table 
+- Each country has one state or more , but this states belong to one country 
+- This table CoinPlans should remove because there is no enough columns to clear what is benfit from it , and does not have any relation with any table 
+- This table EmailSubscription should remove because there is no enough columns to clear what is benfit from it , and does not have any relation with any table 
+- Each evaluator recive  one problem request or more , each problem request has one evaluator or more 
+- This Exceptions table save details about all exception and does not have any link with any table 
+- Each DifficultyLevel has many rank and experince piont, but these ranks and experince pionts belongs to one diffculty level 
+- Each task has one reason to delete, this reason added by one user 
+- Each student follow one problem or more , each problem followed by one student or more 
+- Each group has requested by one student or more 
+- Each group has one admin 
+- Each group has one task or more , but this task added by one uesr and updated by one user
+- Each group has one voting or more , this vote for one person and requested by from one person 
+- Each  group voting has details , this details belong to one group voting
+- Each group voting has one voted member or more ,this member voted one time or more 
+- Each vote has one status , but this status belong to many votes 
+- Each professional may be helper 
+- Each problem has one heartbeat or more ,each one of heartbeat belong to one solution provided by one student , but each student has one heartbeat or more 
+- Each University has one Hackathon or more , but this  Hackathon  belong to one University
+- This table languages store details about languages that used in the system 
+- This table  LevelWiseProblem is not clear what is the benfit from user it and if its belong to problem or to a plan 
+-Each evaluator provide one result , but results provide from more than one evaluator 
+- Each soluation has more than one grade, the grade give to more than soluation 
+- Each problem has one or more results, These results give to one problem or more 
+- Each result has one evaluation status , but this status give to one grade or more 
+- Each result of  MulEvaluationResult results has one or more EvaluationCriteria, but these EvaluationCriteria belong to more than one  result 
+- Each result has many events on the their criteria , and these events exist in many results 
+- Each user can pin many problems to be on top , but each problem pin by one user
+- This ReasonsForDeleteGroup we can add its records to reasons table and remove it 
+- This table contion the details about resource used in problem 
+- Some of resources has one file or more , but these files belong to one resource
+- This table ResourceFor contain the what is the  user type  can user the resource
+- Each user view one resource or more , this resouce view by one user or more 
+- User can Add or updateone resource or more to view ,this resource add or update  by one user 
+-This table ResourceTypes contain information about the type of resource 
+-Each problem repository has one file or more , but these files belong to one Repository
+- This table RequestStatus save information about the status of what ever request
+- Each problem soultion has one comment or more , but these comments belong to one solution   
+- Problem share to many students , and students shared one problem 
+- Probem shared by one user or more,  student share one problem each time 
+- This table sysdiagrams is not link with any table and does not have records so its better to remove it 
+- This table TaskStatus contain explantions about the status of task 
+- Each user has one Transactions or more , these transactions belongs to one user
+- Each user take one task or more tasks , but these task belong to one user 
+- Each user requested many tasks , task requested by one user 
+- User take one task or more , this task has one status 
+- Each user add one wallet or more , but this wallet belong to one user 
+- Each wallet has one transaction or more, but this transaction belong to one wallet 
+- Each transaction has one type ,but this type belong to one or more transactions
+---------------------------------------------------------------------------------                                  The End 
+                                 ======== 
+
+
+
